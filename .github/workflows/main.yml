@@ -16,21 +16,23 @@ jobs:
     - name: Checkout code
       uses: actions/checkout@v3
 
+    - name: Set up Node.js
+      uses: actions/setup-node@v3
+      with:
+        node-version: '14'
+
     - name: Cache Node.js modules
       uses: actions/cache@v3
       with:
         path: |
           ~/.npm
-          node_modules
-        key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
+          app/node_modules
+        key: ${{ runner.os }}-node-${{ hashFiles('app/package-lock.json') }}
         restore-keys: |
           ${{ runner.os }}-node-
 
-    - name: Set up Node.js
-      uses: actions/setup-node@v3
-      with:
-        node-version: '14' 
+    - name: Install dependencies
+      run: cd app && npm install
 
-    - run: npm install
-
-    - run: npm test
+    - name: Run tests
+      run: cd app && npm test
